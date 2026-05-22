@@ -6,7 +6,7 @@ updated: 2026-05-22
 checkpoint:
   current_phase: 8
   phases_completed: [1, 2, 3, 4, 5, 6, 7]
-  frs_drafted: 12
+  frs_drafted: 13
   quality_check_status: accepted
 product_type: web-app
 target_scale:
@@ -32,8 +32,8 @@ timeline_budget:
 **Insight, którego status quo nie wykorzystuje:**
 
 1. Procenty z planu zakładają świeże 1RM. W praktyce 1RM jest stare. **WodAssist szacuje obciążenie z historii ostatnich realnych prób, nie z deklarowanego 1RM.**
-2. Tempo (rytm ruchu, np. 3-1-1-0) zmienia wynik tak samo jak ciężar, a aplikacje dziennikowe (SugarWOD, BTWB) sugerują tylko kilogramy.
-3. **Cross-exercise extrapolation:** mając historyczne tempo wiosłowania w 2 min mogę oszacować, ile powtórzeń realnie wyciągniesz w AMRAP-ie tej samej długości. To wiązanie między ćwiczeniami i metrykami czasowymi jest tym, czego dzienniki nie robią.
+2. **Cross-exercise extrapolation:** mając historyczny pace cardio (np. wiosłowanie 500 m w 2:00) mogę oszacować, ile powtórzeń realnie wyciągniesz w AMRAP-ie tej samej długości albo jaki pace utrzymasz w „for time". To wiązanie między ćwiczeniami i metrykami czasowymi jest tym, czego dzienniki nie robią.
+3. **Session-aware fatigue modeling:** sugestia uwzględnia pozycję ćwiczenia w sesji (kumulowane zmęczenie po Part A/B przed Part C), nie traktuje każdego ruchu w izolacji. Dzienniki sugerujące per-ćwiczenie (gdy sugerują) ignorują, że ten sam thruster po piętnastominutowym AMRAP-ie to nie jest ten sam thruster co świeży w Part A.
 
 ## User & Persona
 
@@ -43,7 +43,8 @@ timeline_budget:
 
 - **Logowanie:** email + hasło. Każdy użytkownik ma własne konto, własną historię i własne plany.
 - **Role:** jedna płaska rola. Brak trenerów, administratorów, współdzielenia. Użytkownik widzi wyłącznie swoje dane.
-- **Open question (do PRD):** czy w MVP wymagamy weryfikacji emaila i flow reset hasła, czy zostawiamy „kto pamięta hasło, ten ma konto" — decyzja domknie się przy implementacji.
+- **Reset hasła:** użytkownik może zresetować hasło przez link wysłany na zarejestrowany email (FR-004).
+- **Weryfikacja emaila przy rejestracji:** nie w MVP — patrz Non-Goals. Decyzja: prosty kompromis MVP po godzinach. Reset hasła chroni przed scenariuszem „zapomniałem = nowe konto", weryfikacja emaila to dodatkowy ekran i integracja dla wartości względnie niskiej w MVP.
 
 ## Success Criteria
 
@@ -58,7 +59,7 @@ timeline_budget:
 5. Wykonuje sesję i wpisuje realne wyniki.
 6. Wyniki lądują w historii i karmią kolejne sugestie (model "uczy się" użytkownika z każdą sesją).
 
-**Jakość AI:** co najmniej 70% sugestii mieści się w przedziale ±15% od realnego wyniku użytkownika. (Mierzone na własnej historii twórcy plus kilku użytkowników pilotażowych.)
+**Jakość AI:** co najmniej 70% sugestii mieści się w przedziale ±20% od realnego wyniku użytkownika. (Mierzone na własnej historii twórcy plus kilku użytkowników pilotażowych.)
 
 ### Secondary (jeśli starczy czasu)
 
@@ -73,7 +74,7 @@ Po wpisaniu realnego wyniku, na ekranie końca sesji użytkownik widzi porównan
 ## Timeline budget
 
 - **mvp_weeks:** 3 tygodnie po godzinach.
-- **Scope-down zaakceptowany:** parser w wersji „best effort" + edycja ręczna (zamiast „perfect parser" gate); ankieta cold-startowa zamiast magicznego wnioskowania bez danych; **tempo wycięte z MVP** (mimo że było częścią insightu — wraca w v2).
+- **Scope-down zaakceptowany:** parser w wersji „best effort" + edycja ręczna (zamiast „perfect parser" gate); RX z planu zamiast ankiety cold-startowej; **pace cardio jako osobna sugestia wycięty z MVP** (wraca w v2 — patrz Non-Goals).
 
 ---
 
@@ -89,6 +90,8 @@ Po wpisaniu realnego wyniku, na ekranie końca sesji użytkownik widzi porównan
   > Socrates: Counter-argument considered: "logowanie co dzień to tarcie w sali treningowej". Resolution: zaakceptowane — FR uzupełniony o długą sesję / remember me jako część zachowania logowania.
 - FR-003: Użytkownik widzi wyłącznie własne plany i historię — dane nie wyciekają między kontami. Priority: must-have
   > Socrates: Counter-argument considered: "współdzielenie planów (trener↔podopieczny) byłoby silniejszą propozycją wartości". Resolution: dobry pomysł, ale wykracza poza MVP — dopisane do Non-Goals z notatką „rozważyć w v2".
+- FR-004: Użytkownik może zresetować hasło — po podaniu zarejestrowanego adresu email otrzymuje link do ustawienia nowego hasła. Brak weryfikacji emaila przy rejestracji w MVP. Priority: must-have
+  > Socrates: Counter-argument considered: "brak weryfikacji emaila otwiera drogę do kont na fałszywe adresy". Resolution: zaakceptowane jako koszt MVP — bez resetu „zapomniałem hasła = nowe konto" zabija ciągłość historii; pełna weryfikacja emaila wraca w v2 razem z innymi elementami hygiene.
 
 ### Plany treningowe
 
@@ -96,8 +99,8 @@ Po wpisaniu realnego wyniku, na ekranie końca sesji użytkownik widzi porównan
   > Socrates: Counter-argument considered: "ankieta startowa z 3-5 wynikami referencyjnymi". Resolution: odrzucone na korzyść RX z planu — wartości RX dają naturalny punkt wejścia bez friction onboardingu i bez ryzyka, że nowicjusz wpisze zmyślony 1RM.
 - FR-020: Użytkownik może wkleić tekst planu treningowego (jeden lub wiele dni — pojedynczy dzień lub cały tydzień). Priority: must-have
   > Socrates: Counter-argument considered: brak kontrargumentu dla samego wklejenia. Dodatkowo wypłynął dylemat: niektóre plany tygodniowe mieszają sesje beginners + normal class w jednym dokumencie — czy użytkownik sam wybiera swoje sesje, czy aplikacja rozróżnia? Zapisane do Open Questions; FR-020 stoi.
-- FR-021: Aplikacja próbuje automatycznie wyciągnąć z tekstu osobne dni treningowe i listę ćwiczeń każdego dnia (best effort, na bazie LLM). Priority: must-have
-  > Socrates: Counter-argument considered: brak — to serce MVP.
+- FR-021: Aplikacja próbuje automatycznie wyciągnąć z tekstu osobne dni treningowe i listę ćwiczeń każdego dnia (best effort). Gdy plan dnia zawiera dodatkowy, jawnie oznaczony blok dla początkujących (np. nagłówek „beginners:" pod właściwym treningiem dnia), parser pomija ten blok — MVP obsługuje wyłącznie sesje dla standardowej klasy. Priority: must-have
+  > Socrates: Counter-argument considered: „mixed plans (beginners + normal class w jednym dokumencie) — czy parser rozróżnia automatycznie, czy zostawiamy wybór użytkownikowi?". Resolution: parser auto-filtruje — bierze treningi standardowej klasy, pomija „beginners:" bloki. Powód: persona MVP to osoba trenująca w boksie wg planu trenera dla standardowej klasy; początkujący w tym etapie nie potrzebują takiej aplikacji.
 - FR-022: Użytkownik może edytować ćwiczenia w sparsowanym dniu prostym formularzem tekstowym (edycja pojedynczego pola: nazwa ćwiczenia, ciężar/powt./czas RX). Brak drag-drop, brak reorderowania w MVP — gdy parser pomyli kolejność, użytkownik wkleja od nowa. Priority: must-have
   > Socrates: Counter-argument considered: "edycja ręczna to dużo UI do zbudowania". Resolution: zaakceptowane — FR doprecyzowany do najprostszej możliwej formy edycji pola; zaawansowane operacje (reorder, drag-drop, „popraw promptem") wykluczone z MVP.
 - FR-023: Użytkownik widzi historię swoich planów / dni i może otworzyć konkretny dzień. Główny ekran aplikacji to „dziś trenuję" (najbliższa lub bieżąca sesja na pierwszym planie); lista planów jest nawigacją pomocniczą. Priority: must-have
@@ -114,8 +117,8 @@ Po wpisaniu realnego wyniku, na ekranie końca sesji użytkownik widzi porównan
 
 - FR-040: Użytkownik wpisuje realne wyniki sesji zgodnie ze strukturą WOD-a — np. dla treningu „Part A: bench press, find heavy 1RM" wpisuje pojedynczy ciężar; dla „Part B: EMOM 10 min, 5 thrusters @60kg" wpisuje ciężar (i ew. rundy ukończone); dla „Part C: AMRAP 20" wpisuje liczbę rund / powtórzeń lub czas. Wynik jest per część sesji, niekoniecznie per ćwiczenie. Priority: must-have
   > Socrates: Counter-argument considered: "wpisywanie 6-10 pól po treningu to żmudne". Resolution: odrzucone — wpisanie 1-3 wyników per sesja (tyle ile części) jest realne; granularność dopasowana do struktury WOD-a redukuje friction.
-- FR-041: Wyniki są zapisywane w historii i karmią kolejne sugestie. Priority: must-have
-  > Socrates: Counter-argument considered: brak — wyniki muszą karmić model, inaczej AI nie ewoluuje. Detale (obsługa outlierów, długie przerwy między sesjami tego samego ruchu) zostawione do PRD/implementacji.
+- FR-041: Wyniki są zapisywane w historii i karmią kolejne sugestie. W MVP wszystkie wpisy historyczne ważone równo — brak heurystyk wykrywania wartości odstających, brak ważenia recencyjnego, brak ręcznego flagowania „zły dzień / deload / choroba". Priority: must-have
+  > Socrates: Counter-argument considered: „wartości odstające w historii (PR sprzed roku, sesja po chorobie) zaburzą sugestie, jeśli wszystkie wpisy traktowane równo". Resolution: zaakceptowane jako świadomy kompromis MVP — heurystyki wagowania wprowadzają złożoność modelu i UI (pole „jak się czułem", flagowanie) bez liniowego wpływu na MVP value prop; zaczynamy od najprostszej polityki i obserwujemy, czy w praktyce sugestie odjeżdżają. Wraca jako temat w v2.
 - FR-042: Po zapisaniu sesji użytkownik widzi porównanie sugestii AI vs. realny wynik. Framing tonalny: gdy realny ≥ sugestia, wynik pokazany jako pozytywny progres („zrobiłeś +8% nad sugestię"); gdy realny < sugestia, framing jest neutralny / informacyjny („dziś poszło lżej — uwzględnimy w kolejnych sugestiach"), nie wytykający minusu. Priority: nice-to-have
   > Socrates: Counter-argument considered: "negatywne porównanie demotywuje". Resolution: zaakceptowane — FR uzupełniony o asymetryczny tonalny framing.
 
@@ -141,11 +144,9 @@ Po wpisaniu realnego wyniku, na ekranie końca sesji użytkownik widzi porównan
 
 ## Open Questions
 
-Pytania, które wypłynęły podczas shapingu, ale ich rozstrzygnięcie nie jest konieczne do PRD — `/10x-prd` przeniesie je do swojej sekcji Open Questions.
+Pytania, które wypłynęły podczas shapingu i pozostają nierozstrzygnięte na poziomie PRD — `/10x-prd` przeniesie je do swojej sekcji Open Questions.
 
-- **Weryfikacja emaila i flow reset hasła w MVP** — wymagamy ich, czy zostawiamy „kto pamięta hasło, ten ma konto"? (Phase 2)
-- **Mixed plans (beginners + normal class)** — niektóre plany tygodniowe mieszają sesje dla różnych poziomów w jednym dokumencie. Czy MVP wymaga od użytkownika ręcznego wyboru swoich sesji po sparsowaniu, czy aplikacja próbuje rozróżnić poziomy automatycznie (z dalszymi konsekwencjami w UI i sugestiach)? (Phase 4, FR-020)
-- **Outliery w historii treningowej** — czy AI ma rozpoznawać „zły dzień" / chorobę / deload i ważyć wyniki, czy traktuje wszystkie sesje równo? (Phase 4, FR-041) — pole danych „jak się czułem" jest poza MVP, ale model może potrzebować heurystyki.
+_(Pytania produktowe — weryfikacja emaila + reset hasła, mixed plans beginners/normal, wartości odstające w historii — rozstrzygnięte w iteracji po shape-notes i zaszyte odpowiednio w FR-004, FR-021, FR-041 oraz w Non-Goals. Brak zaległych pytań produktowych.)_
 
 ---
 
@@ -172,7 +173,7 @@ Dla każdej części WOD-a, w widoku „dziś trenuję", konkretna sugestia w fo
 
 **Self-improvement loop:**
 
-Każdy wpisany wynik (FR-040) jest nowym sygnałem dla modelu (FR-041). Trafność sugestii (FR-042) mierzona w czasie — cel mierzalny: 70% sugestii ±15% od realnego wyniku po N tygodniach użycia. Im więcej sesji w historii, tym ostrzejsze sugestie.
+Każdy wpisany wynik (FR-040) jest nowym sygnałem dla modelu (FR-041). Trafność sugestii (FR-042) mierzona w czasie — cel mierzalny: 70% sugestii ±20% od realnego wyniku po N tygodniach użycia. Im więcej sesji w historii, tym ostrzejsze sugestie.
 
 **Jak użytkownik to widzi w produkcie:**
 
@@ -181,7 +182,7 @@ Wszystko mieści się w głównym widoku „dziś trenuję" — sesja dnia, dla 
 ## Non-Functional Requirements
 
 - **Czas reakcji sugestii:** od momentu otwarcia widoku „dziś trenuję" do pojawienia się sugestii dla wszystkich części sesji upływa mniej niż 3 sekundy w typowym warunku (mobilne 4G, średni rozmiar planu — 3-4 części). Powyżej tego progu użytkownik traci kontekst sesji.
-- **Trafność sugestii:** co najmniej 70% sugestii AI mieści się w przedziale ±15% od realnego wyniku użytkownika, mierzone na zebranych danych pilotażowych po N tygodniach użycia. (Pokrywa się z Primary success criterion — pinned tu jako mierzalna jakość, nie samo kryterium sukcesu.)
+- **Trafność sugestii:** co najmniej 70% sugestii AI mieści się w przedziale ±20% od realnego wyniku użytkownika, mierzone na zebranych danych pilotażowych po N tygodniach użycia. (Pokrywa się z Primary success criterion — pinned tu jako mierzalna jakość, nie samo kryterium sukcesu.)
 - **Prywatność danych użytkownika:** dane treningowe (plany, historia wyników) nie opuszczają systemu poza wywołaniami do dostawcy LLM niezbędnymi do parsowania planu i generowania sugestii. Brak eksportu, brak indeksowania, brak udostępniania osobom trzecim, brak elementów społecznościowych.
 - **Trwałe usunięcie danych (RODO):** użytkownik może w aplikacji uruchomić usunięcie konta wraz ze wszystkimi swoimi planami i wynikami; po potwierdzeniu dane nie są odzyskiwalne.
 - **Bezpieczeństwo haseł:** hasła użytkowników nigdy nie są przechowywane w formie czytelnej; nawet w razie wycieku bazy hasła pozostają nieodtwarzalne.
@@ -212,10 +213,13 @@ MVP jawnie NIE robi poniższych rzeczy. Lista jest świadoma — każdy punkt to
 **Wypłynęły w trakcie shapingu:**
 
 - **Współdzielenie planów trener↔podopieczny** — model „jeden użytkownik widzi tylko swoje dane" stoi. Powód: relacja wielu-do-jednego wprowadza role, widoki, uprawnienia. Rozważyć w v2 jako wyraźnie wartościowe rozszerzenie.
-- **Tempo ćwiczeń (np. 3-1-1-0)** — sugestie obejmują tylko obciążenie / liczbę powtórzeń / czas. Powód: kompromis MVP scope-down z Fazy 3; tempo wraca w v2 mimo, że było częścią pierwotnego insightu.
+- **Pace cardio jako osobna sugestia** (np. „wiosłuj 500 m w 2:00", „biegaj milę pace 5:30/km") — sugestie w MVP obejmują obciążenie / liczbę powtórzeń / czas. Pace cardio występuje wyłącznie jako część RX z planu (gdy autor go zadeklarował) oraz jako sygnał historyczny dla cross-exercise extrapolation (FR-030 — szacowanie liczby rund w AMRAP-ie na bazie historycznego pace'u). Powód: dodanie pace'u jako sugerowanego wymiaru rozszerza model, format wyjścia i UI bez liniowego wpływu na MVP value prop. Wraca w v2.
 - **Reorder / drag-drop edycji ćwiczeń** — edycja w MVP jest prymitywna (tekstowa per pole). Powód: zaawansowany edytor odchodzi od „best effort parser + minimalna korekta" w stronę pełnoprawnego edytora planów, co podwoiłoby UI.
 - **Cross-user heurystyki / learning** („osoby z twoim back squat 1RM robią X") — sugestie są wyłącznie per-user. Powód: wymagałoby telemetrycznego zbierania danych i agregacji; otwiera dyskusję privacy + GDPR; off-MVP.
 - **Ankieta startowa (cold start z 3-5 wynikami referencyjnymi)** — wycięta. Powód: wartości RX z planu treningowego stanowią naturalny punkt odniesienia bez friction onboardingu i bez ryzyka, że nowicjusz wpisze zmyślone 1RM.
+- **Weryfikacja emaila przy rejestracji** — w MVP brak. Powód: kompromis MVP po godzinach. Reset hasła (FR-004) chroni przed scenariuszem „zapomniałem hasła = nowe konto"; pełna weryfikacja emaila to dodatkowy ekran, integracja z mailingiem i flow potwierdzenia — wraca w v2 razem z innymi elementami hygiene (np. rate-limiting prób logowania).
+- **Obsługa sesji dla początkujących (beginners blocks)** — parser pomija jawnie oznaczone bloki „beginners:" w wklejanych planach (FR-021). Powód: persona MVP to osoba trenująca standardową klasę CrossFit wg planu trenera; początkujący w tym etapie nie potrzebują tego typu aplikacji — model i UI optymalizowane pod jeden poziom.
+- **Heurystyki ważenia historii treningowej** — wszystkie wpisy historyczne ważone równo (FR-041). Powód: heurystyki (ważenie recencyjne, wykrywanie wartości odstających, ręczne flagowanie „zły dzień") wprowadzają złożoność modelu i UI bez liniowego wpływu na MVP value prop. Wraca jako temat w v2, jeśli w praktyce sugestie zaczną odjeżdżać.
 
 ---
 
