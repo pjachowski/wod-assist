@@ -18,7 +18,7 @@ WodAssist is an Astro 6 SSR app with Supabase Auth, deployed to **Cloudflare Wor
 - ✅ **No config-warning banner on the live site** — the homepage HTML contains no banner div. Secrets resolve correctly at runtime; `missingConfigs` is empty. (An earlier "warning present" reading was a false positive from a `grep | head` shell pipeline masking grep's exit code — there was never a banner.)
 - ℹ️ **Production was healthy all along.** No outage, no broken auth, no banner. The only stale thing in the deployed build (`2ac411a`) is the `site:` value baked into the sitemap (`pages.dev`); see Phase 4.
 - ❌ **A stale, broken Pages project `wod-assist` also exists** (`wod-assist.pages.dev` → 404). It never served a functional build and must be deleted to avoid confusion.
-- ⏳ **Phase-1 pre-flight fixes are done but uncommitted** in the working tree.
+- ✅ **Phase-1 pre-flight fixes committed** in `6146b7f` and redeployed (2026-06-06) — live sitemap now points at `workers.dev`, security headers active.
 
 ### Note: the `config-status.ts` refactor is defensive, not a bug fix
 
@@ -47,9 +47,9 @@ export function getMissingConfigs(): ConfigStatus[] {
 - [x] **1.3** Fix CI branch `master` → `main` in `.github/workflows/ci.yml`
 - [x] **1.4** Add `site` to `astro.config.mjs` — set to `https://wod-assist.patryk-jachowski.workers.dev` (the Worker URL, not pages.dev) so the sitemap generates correct absolute URLs
 - [x] **1.5** `config-status.ts` build-time → request-time refactor (`getConfigStatuses()` / `getMissingConfigs()`) + `Layout.astro` updated to call them — fixes the false config warning on Cloudflare runtime
-- [ ] **1.6** `npx astro sync && npm run build` — verify the build succeeds without env vars (they're `optional: true`)
-- [ ] **1.7** Check bundle size — inspect `dist/_worker.js` to confirm it fits the **3 MiB free-tier limit** (10 MiB on paid)
-- [ ] **1.8** Commit the Phase-1 changes (currently all uncommitted — CI and redeploy need them on `main`)
+- [x] **1.6** `npx astro sync && npm run build` — build succeeds
+- [x] **1.7** Bundle size checked — 393 KiB gzipped (limit 3 MiB free tier), huge headroom
+- [x] **1.8** Phase-1 changes committed in `6146b7f` on `main`
 
 **Files:** `wrangler.jsonc`, `package.json`, `.github/workflows/ci.yml`, `astro.config.mjs`, `src/lib/config-status.ts`, `src/layouts/Layout.astro`
 
@@ -86,16 +86,14 @@ export function getMissingConfigs(): ConfigStatus[] {
 
 ---
 
-## Phase 4: Redeploy _(agent-automated — OPTIONAL, low value)_
+## Phase 4: Redeploy _(agent-automated — DONE 2026-06-06)_
 
-Production is healthy — Worker live, auth works, no banner. The only thing a redeploy ships is the corrected `site:` value (the deployed sitemap still points at `pages.dev`) plus the defensive `config-status.ts` refactor. Purely sitemap/SEO hygiene; do it whenever you next deploy for a real reason.
+Redeployed together with the Phase-8 security headers. Version ID `6525c182-d192-484b-b2bf-225ad1eda16b`.
 
-- [ ] **4.1** Ensure Phase-1 changes are committed (Phase 1.8)
-- [ ] **4.2** Clean build: `rm -rf dist && npm run build`
-- [ ] **4.3** Deploy: `npx wrangler deploy`
-  - Note: `wrangler deploy` (NOT `wrangler pages deploy`)
-  - Output shows the deployed version ID and the `*.workers.dev` URL
-- [ ] **4.4** Confirm the config warning is gone: the homepage HTML must no longer contain "Supabase nie jest skonfigurowany"
+- [x] **4.1** Phase-1 changes committed (`6146b7f`)
+- [x] **4.2** Clean build: `rm -rf dist && npm run build`
+- [x] **4.3** Deployed via `npx wrangler deploy` — 393 KiB gzipped
+- [x] **4.4** Confirmed: homepage HTML contains no "Supabase nie jest skonfigurowany"; live sitemap now points at `workers.dev`
 
 **Troubleshooting:**
 
@@ -135,7 +133,7 @@ Base URL: `https://wod-assist.patryk-jachowski.workers.dev`
   - Permission: `Account > Workers Scripts > Edit` (Workers, **not** Pages)
 - [ ] **7.2** User adds GitHub repo secrets _(GitHub > Settings > Secrets > Actions)_:
   - `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` (`c124df48fe17c4074079c356b4d4080a`)
-- [ ] **7.3** Agent adds a deploy job to `.github/workflows/ci.yml`:
+- [x] **7.3** Deploy job added to `.github/workflows/ci.yml` (2026-06-06; the job will fail until 7.1/7.2 secrets are in place):
   ```yaml
   deploy:
     needs: ci
@@ -163,15 +161,15 @@ Base URL: `https://wod-assist.patryk-jachowski.workers.dev`
 
 ---
 
-## Phase 8: Hardening _(agent-automated)_
+## Phase 8: Hardening _(agent-automated — 8.1/8.2 DONE 2026-06-06, verified live via `curl -I`)_
 
-- [ ] **8.1** Add security headers in `src/middleware.ts` — append to the response after `next()`:
+- [x] **8.1** Add security headers in `src/middleware.ts` — append to the response after `next()`:
   - `X-Frame-Options: DENY`
   - `X-Content-Type-Options: nosniff`
   - `Referrer-Policy: strict-origin-when-cross-origin`
   - `Permissions-Policy: camera=(), microphone=(), geolocation=()`
   - **No CSP** — Astro inlines scripts/styles; a strict CSP without nonces would break hydration
-- [ ] **8.2** Add `public/_headers` for static assets — same headers as 8.1 (covers assets served directly, not through the Worker)
+- [x] **8.2** Add `public/_headers` for static assets — same headers as 8.1 (covers assets served directly, not through the Worker)
 - [ ] **8.3** Rollback procedure (Workers):
   - List versions: `npx wrangler deployments list`
   - Roll back: `npx wrangler rollback [<version-id>]` (instant, no rebuild)
