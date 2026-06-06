@@ -75,14 +75,9 @@ export function getMissingConfigs(): ConfigStatus[] {
   Use `wrangler secret` (NOT `wrangler pages secret` — wrong product).
   Use the Supabase **anon key** (not service_role — service_role bypasses RLS).
 
-- [ ] **3.2** Configure Supabase redirect URLs _(Supabase Dashboard > Authentication > URL Configuration)_:
-  - Set **Site URL** to `https://wod-assist.patryk-jachowski.workers.dev`
-  - Add `https://wod-assist.patryk-jachowski.workers.dev/**` to **Redirect URLs**
-  - Required for email confirmation links and any future OAuth callbacks
+- [x] **3.2** Supabase redirect URLs configured (2026-06-06): Site URL = `https://wod-assist.patryk-jachowski.workers.dev`, Redirect URLs include `https://wod-assist.patryk-jachowski.workers.dev/**`.
 
-- [ ] **3.3** Verify Supabase email confirmation setting _(Supabase Dashboard > Auth > Providers > Email)_:
-  - If **"Confirm email" is enabled**: users must click a confirmation link before signin. The app has no `/api/auth/callback` route yet. **Recommendation for MVP: disable email confirmations** to simplify.
-  - If **disabled**: signup works immediately, no callback route needed.
+- [x] **3.3** Decision (2026-06-06): **email confirmations stay ENABLED**. Consequence: after signup the user must click the e-mail link before signin (`Email not confirmed` otherwise). Without an `/api/auth/callback` route the link confirms the account but does NOT auto-establish a session — the user signs in manually afterwards. Acceptable for MVP; add a callback route if auto-signin after confirmation is ever wanted.
 
 ---
 
@@ -112,18 +107,20 @@ The dead Pages project `wod-assist` causes `wod-assist.pages.dev` to 404, masque
 
 ---
 
-## Phase 6: Post-Deploy Verification _(user in browser)_
+## Phase 6: Post-Deploy Verification _(DONE 2026-06-06 — curl + user in browser)_
 
-Base URL: `https://wod-assist.patryk-jachowski.workers.dev`
+Base URL: `https://wod-assist.patryk-jachowski.workers.dev`. Test account: `patryk.jachowski+wodtest@gmail.com`.
 
-- [ ] **6.1** Open `/` — landing page renders, **no Supabase config warning banner** (the 4.4 check, in browser)
-- [ ] **6.2** Open `/dashboard` while unauthenticated → redirects to `/auth/signin` (verified via curl: 302)
-- [ ] **6.3** Create account at `/auth/signup` — form submits, redirects to `/auth/confirm-email`
-- [ ] **6.4** Sign in at `/auth/signin` → redirects to `/`, topbar shows user email
-- [ ] **6.5** Access `/dashboard` while authenticated — dashboard renders with the user's email
-- [ ] **6.6** Sign out → redirects to `/`, signed-out state
-- [ ] **6.7** Sign in with wrong credentials → error message on `/auth/signin`
-- [ ] **6.8** Open a non-existent route → 404 page served (per `not_found_handling: "404-page"`)
+- [x] **6.1** `/` renders 200, no Supabase config warning banner (curl)
+- [x] **6.2** `/dashboard` unauthenticated → 302 to `/auth/signin` (curl)
+- [x] **6.3** Signup → 302 to `/auth/confirm-email`; confirmation e-mail arrived and its link worked (user clicked it; afterwards the signin error for the account changed from `Email not confirmed` to `Invalid login credentials` — account confirmed)
+- [x] **6.4** Sign in → redirect to `/`, topbar shows email (user, in browser)
+- [x] **6.5** `/dashboard` authenticated renders with user e-mail (user, in browser)
+- [x] **6.6** Signout → 302 to `/`, signed-out state, `/dashboard` again 302 (curl)
+- [x] **6.7** Wrong credentials → `?error=Invalid login credentials` on `/auth/signin` (curl)
+- [x] **6.8** Non-existent route → 404 (curl)
+
+> Curl caveats discovered during verification (for future re-runs): Astro's `security.checkOrigin` rejects form POSTs without an `Origin` header (403), and `+` in an e-mail address must be sent via `--data-urlencode` (plain `-d` decodes `+` as a space).
 
 ---
 
