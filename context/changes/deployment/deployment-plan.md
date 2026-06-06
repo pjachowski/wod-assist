@@ -129,10 +129,8 @@ Base URL: `https://wod-assist.patryk-jachowski.workers.dev`
 
 ## Phase 7: CI/CD Auto-Deploy _(optional — agent + user)_
 
-- [ ] **7.1** User creates a Cloudflare API token _(Dashboard > My Profile > API Tokens)_:
-  - Permission: `Account > Workers Scripts > Edit` (Workers, **not** Pages)
-- [ ] **7.2** User adds GitHub repo secrets _(GitHub > Settings > Secrets > Actions)_:
-  - `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` (`c124df48fe17c4074079c356b4d4080a`)
+- [x] **7.1** User created a Cloudflare API token (2026-06-06; first value leaked into a chat session and was rolled — current secret holds the rolled value)
+- [x] **7.2** GitHub repo secrets added — `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` (`c124df48fe17c4074079c356b4d4080a`). First attempt failed with `Invalid access token [code: 9109]` (mis-pasted secret value); fixed by re-entering the token.
 - [x] **7.3** Deploy job added to `.github/workflows/ci.yml` (2026-06-06; the job will fail until 7.1/7.2 secrets are in place):
   ```yaml
   deploy:
@@ -157,7 +155,7 @@ Base URL: `https://wod-assist.patryk-jachowski.workers.dev`
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
   ```
   Note: `wrangler deploy`, not `wrangler pages deploy`.
-- [ ] **7.4** Push a trivial change to `main` — verify the deploy job runs and deploys.
+- [x] **7.4** Verified 2026-06-06: push of `7faf811` ran `ci` + `deploy`; after the secret fix the rerun deployed to the Worker (deployment created 07:22 UTC, both jobs green).
 
 ---
 
