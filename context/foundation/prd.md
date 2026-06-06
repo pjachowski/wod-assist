@@ -1,6 +1,6 @@
 ---
 project: WodAssist
-version: 1
+version: 2
 status: draft
 created: 2026-05-22
 context_type: greenfield
@@ -17,13 +17,13 @@ timeline_budget:
 
 ## Vision & Problem Statement
 
-Osoba trenująca CrossFit z planu układanego przez trenera staje tuż przed serią ze sztangą / wiosłem / kettlem i ma około trzydziestu sekund na decyzję „ile ciężaru, jakim tempem, ile powtórzeń zdążę". Procentowe wskazówki w planie (np. „5×5 back squat @ 75%") zakładają aktualne 1RM, którego nikt nie odnawia, a metryki czasowe (AMRAP, EMOM, „for time") nie mają nawet takiego punktu odniesienia. W efekcie użytkownik zgaduje z pamięci, kopiuje wynik z ostatniej podobnej sesji, pyta sąsiada albo gra zachowawczo i nie progresuje. Wyniki, które zapisuje (jeśli zapisuje), są martwe — nie wracają jako wskazówki przy kolejnej sesji.
+Osoba trenująca CrossFit z planu układanego przez trenera przegląda dzisiejszy trening lub treningi na resztę tygodnia i chce z wyprzedzeniem wiedzieć „ile ciężaru, jakim tempem, ile powtórzeń realnie wyciągnę". Procentowe wskazówki w planie (np. „5×5 back squat @ 75%") zakładają aktualne 1RM, którego nikt nie odnawia, a metryki czasowe (AMRAP, EMOM, „for time") nie mają nawet takiego punktu odniesienia. W efekcie użytkownik zgaduje z pamięci, kopiuje wynik z ostatniej podobnej sesji, pyta sąsiada albo gra zachowawczo i nie progresuje. Wyniki, które zapisuje (jeśli zapisuje), są martwe — nie wracają jako wskazówki przy przeglądaniu kolejnych sesji.
 
 Insight, którego status quo nie wykorzystuje, ma trzy warstwy. Po pierwsze: procenty z planu zakładają świeże 1RM, ale w praktyce 1RM jest stare — sensowna sugestia powinna wychodzić z historii ostatnich realnych prób, nie z deklarowanego maksa. Po drugie: mając historyczny pace cardio (np. wiosłowanie 500 m w 2:00), można oszacować realną liczbę powtórzeń w AMRAP-ie tej samej długości albo utrzymywany pace w „for time" — wiązanie między ćwiczeniami i metrykami czasowymi to coś, czego dzienniki treningowe nie robią. Po trzecie: w ramach jednej sesji ćwiczenia nie są niezależne — thruster w Part C po piętnastominutowym AMRAP-ie w Part B nie jest tym samym thrusterem co świeży thruster w Part A, więc sugestia musi modelować kumulowane zmęczenie w obrębie sesji.
 
 ## User & Persona
 
-**Primary persona:** osoba trenująca CrossFit w boksie według planu układanego przez trenera, uczestnik standardowej klasy (nie początkujący, nie scaled, nie masters). Konsumuje plan, nie programuje sobie sama. Przychodzi z planem na konkretną sesję dnia, otwiera aplikację tuż przed serią i chce wiedzieć „ile na sztangę, jakim tempem, ile powtórzeń realnie wyciągnę" tu i teraz. Po sesji wraca raz — żeby wpisać wyniki — i wychodzi. Nie analizuje wykresów, nie udostępnia wyników, nie ogląda swojej historii dla samej historii.
+**Primary persona:** osoba trenująca CrossFit w boksie według planu układanego przez trenera, uczestnik standardowej klasy (nie początkujący, nie scaled, nie masters). Konsumuje plan, nie programuje sobie sama. Wkleja plan od trenera i przegląda dzisiejszy trening lub treningi na resztę tygodnia — chce z wyprzedzeniem wiedzieć „ile na sztangę, jakim tempem, ile powtórzeń realnie wyciągnę". Po sesji wraca raz — żeby wpisać wyniki — i wychodzi. Nie analizuje wykresów, nie udostępnia wyników, nie ogląda swojej historii dla samej historii.
 
 ## Success Criteria
 
@@ -39,7 +39,7 @@ Insight, którego status quo nie wykorzystuje, ma trzy warstwy. Po pierwsze: pro
 ### Guardrails
 
 - Prywatność: dane historyczne i plany są widoczne wyłącznie dla właściciela konta. Brak współdzielenia, eksportu ani indeksowania.
-- Mobile-first UX: kluczowe interakcje są wykonalne jedną ręką na telefonie trzymanym w sali treningowej. Wymuszony zoom, klikanie obu kciuków albo trzymanie telefonu w drugiej ręce = realna porażka produktu.
+- Mobile-first UX: wpisywanie wyników po sesji jest wykonalne jedną ręką na telefonie trzymanym w sali treningowej — wymuszony zoom albo klikanie obu kciuków przy zapisie wyniku = realna porażka produktu. Przeglądanie planu i sugestii musi być wygodne na telefonie, ale bez twardego wymogu obsługi jedną ręką.
 - Brak halucynacji przy braku danych: gdy nie ma podstawy do sugestii (brak RX w planie i brak historii dla danego wzorca ruchu), aplikacja mówi to wprost zamiast wymyślać liczby. Zaufanie zburzone na pierwszej fałszywej sugestii nie wraca.
 
 ## User Stories
@@ -52,7 +52,7 @@ Insight, którego status quo nie wykorzystuje, ma trzy warstwy. Po pierwsze: pro
 
 #### Acceptance Criteria
 
-- Główny widok aplikacji po zalogowaniu to „dziś trenuję" (najbliższa lub bieżąca sesja na pierwszym planie); lista planów jest nawigacją pomocniczą.
+- Główny widok aplikacji po zalogowaniu to „dziś trenuję" (najbliższa lub bieżąca sesja na pierwszym planie) z nawigacją do pozostałych dni tygodnia — każdy dzień ma własne sugestie; lista planów jest nawigacją pomocniczą.
 - Dla każdej części WOD-a w tym widoku widać konkretną sugestię oraz pole do wpisania realnego wyniku.
 - Po zapisaniu wyników widać porównanie sugestia vs. realny wynik (FR-042).
 - Wpisane wyniki są widoczne w historii i wpływają na kolejne sugestie.
@@ -103,12 +103,12 @@ Insight, którego status quo nie wykorzystuje, ma trzy warstwy. Po pierwsze: pro
   > Socrates: Counter-argument considered: „mixed plans (beginners + normal class w jednym dokumencie) — czy parser rozróżnia automatycznie, czy zostawiamy wybór użytkownikowi?". Resolution: parser auto-filtruje — bierze treningi standardowej klasy, pomija „beginners:" bloki. Powód: persona MVP to osoba trenująca w boksie wg planu trenera dla standardowej klasy; początkujący w tym etapie nie potrzebują takiej aplikacji.
 - FR-022: Użytkownik może edytować ćwiczenia w sparsowanym dniu prostym formularzem tekstowym (edycja pojedynczego pola: nazwa ćwiczenia, ciężar / powt. / czas RX). Brak drag-drop, brak reorderowania w MVP — gdy parser pomyli kolejność, użytkownik wkleja od nowa. Priority: must-have
   > Socrates: Counter-argument considered: „edycja ręczna to dużo UI do zbudowania". Resolution: zaakceptowane — FR doprecyzowany do najprostszej możliwej formy edycji pola; zaawansowane operacje (reorder, drag-drop, „popraw promptem") wykluczone z MVP.
-- FR-023: Użytkownik widzi historię swoich planów / dni i może otworzyć konkretny dzień. Główny ekran aplikacji to „dziś trenuję" (najbliższa lub bieżąca sesja na pierwszym planie); lista planów jest nawigacją pomocniczą. Priority: must-have
+- FR-023: Użytkownik widzi historię swoich planów / dni i może otworzyć konkretny dzień. Główny ekran aplikacji to „dziś trenuję" (najbliższa lub bieżąca sesja na pierwszym planie) z nawigacją do pozostałych dni tygodnia — każdy dzień planu można przejrzeć z wyprzedzeniem; lista planów jest nawigacją pomocniczą. Priority: must-have
   > Socrates: Counter-argument considered: „główny ekran powinien być 'dziś trenuję', nie lista planów". Resolution: zaakceptowane — FR uzupełniony o priorytet IA (main = today's session, secondary = plan history).
 
-### Sugestie sesji „live"
+### Sugestie sesji
 
-- FR-030: Dla każdej części / ćwiczenia w wybranym dniu aplikacja sugeruje obciążenie i/lub szacunkową liczbę powtórzeń lub czas — opierając się na RX z planu (gdy dane), historii sesji użytkownika (gdy istnieje) oraz kontekście całej sesji (sugestia uwzględnia kumulowane zmęczenie po wcześniejszych częściach WOD-a, nie traktuje każdego ćwiczenia w izolacji). Priority: must-have
+- FR-030: Dla każdej części / ćwiczenia w wybranym dniu (dzisiejszym lub dowolnym nadchodzącym dniu planu) aplikacja sugeruje obciążenie i/lub szacunkową liczbę powtórzeń lub czas — opierając się na RX z planu (gdy dane), historii sesji użytkownika (gdy istnieje) oraz kontekście całej sesji (sugestia uwzględnia kumulowane zmęczenie po wcześniejszych częściach WOD-a, nie traktuje każdego ćwiczenia w izolacji). Priority: must-have
   > Socrates: Counter-argument considered: „sugerowanie każdego ćwiczenia osobno ignoruje zmęczenie z wcześniejszych ćwiczeń". Resolution: zaakceptowane — FR uzupełniony o wymóg modelowania sesji jako całości, a nie pojedynczych ruchów w izolacji.
 - FR-031: Gdy aplikacja nie ma podstaw do sugestii (brak RX w planie i brak historii dla danego wzorca ruchu), mówi to wprost zamiast wymyślać liczby. Priority: must-have
   > Socrates: Counter-argument considered: „edge case jest rzadki, jeśli FR-010 (RX z planu) działa". Resolution: zgoda — to edge case, ale właśnie dlatego MUSI być jawnie obsłużony; pojedyncza halucynacja niszczy zaufanie do produktu na dobre.
@@ -124,17 +124,17 @@ Insight, którego status quo nie wykorzystuje, ma trzy warstwy. Po pierwsze: pro
 
 ## Non-Functional Requirements
 
-- **Czas reakcji sugestii:** od momentu otwarcia widoku „dziś trenuję" do pojawienia się sugestii dla wszystkich części sesji upływa mniej niż 3 sekundy w typowym warunku sieciowym mobilnym i przy planie zawierającym 3–4 części. Powyżej tego progu użytkownik traci kontekst sesji.
+- **Czas reakcji sugestii:** od momentu otwarcia widoku dnia do pojawienia się sugestii dla wszystkich części sesji upływa na tyle krótko, by przeglądanie pozostało płynne — orientacyjnie do 5 sekund w typowym warunku sieciowym mobilnym i przy planie zawierającym 3–4 części. Moment użycia to spokojny przegląd treningu (dziś lub na resztę tygodnia), nie decyzja przy sztandze — próg jest miękki, ale chroniczne czekanie zniechęca do przeglądania kolejnych dni.
 - **Trafność sugestii:** co najmniej 70% sugestii mieści się w przedziale ±20% od realnego wyniku użytkownika, mierzone na zebranych danych pilotażowych po N tygodniach użycia.
 - **Prywatność danych użytkownika:** dane treningowe (plany, historia wyników) nie są udostępniane stronom trzecim, nie są eksportowane, nie są indeksowane do publicznego dostępu, nie są wykorzystywane do żadnego celu poza dostarczeniem wartości właścicielowi konta. Granica „dane mogą opuścić system w wywołaniu do zewnętrznej usługi koniecznej do parsowania lub sugestii" musi być jawnie zadeklarowana wobec użytkownika (treść tej deklaracji do rozstrzygnięcia — patrz Open Questions).
 - **Trwałe usunięcie danych:** użytkownik może w aplikacji uruchomić usunięcie konta wraz ze wszystkimi swoimi planami i wynikami; po potwierdzeniu dane nie są odzyskiwalne (zgodność z RODO).
 - **Bezpieczeństwo haseł:** hasła użytkowników nigdy nie są przechowywane w formie czytelnej; w razie wycieku składowiska hasła pozostają nieodtwarzalne.
-- **Mobile-first UX:** kluczowe interakcje (otwarcie sesji dnia, wpisanie wyniku, zatwierdzenie sesji) są wykonalne jedną ręką na telefonie trzymanym w sali treningowej — akcje w zasięgu kciuka, formularze bez wymuszonego zoomowania.
+- **Mobile-first UX:** wpisanie wyniku i zatwierdzenie sesji są wykonalne jedną ręką na telefonie trzymanym w sali treningowej — akcje w zasięgu kciuka, formularze bez wymuszonego zoomowania. Przeglądanie sesji i sugestii musi być wygodne na telefonie, bez twardego wymogu obsługi jedną ręką.
 - **Brak halucynacji w sugestiach:** dla każdego ruchu, dla którego ani plan, ani historia nie dostarczają punktu odniesienia, produkt zwraca jawny komunikat o braku danych zamiast liczby.
 
 ## Business Logic
 
-**Reguła w jednym zdaniu:** Na bazie historycznych wyników użytkownika i wartości RX z planu aplikacja przed każdą sesją sugeruje konkretne obciążenie / liczbę powtórzeń / czas dla każdej części WOD-a, uwzględniając kumulowane zmęczenie w trakcie sesji — każdy wpisany wynik zasila kolejne sugestie, więc rekomendacje ewoluują z tygodnia na tydzień.
+**Reguła w jednym zdaniu:** Na bazie historycznych wyników użytkownika i wartości RX z planu aplikacja przy przeglądaniu dnia treningowego (dzisiejszego lub nadchodzącego) sugeruje konkretne obciążenie / liczbę powtórzeń / czas dla każdej części WOD-a, uwzględniając kumulowane zmęczenie w trakcie sesji — każdy wpisany wynik zasila kolejne sugestie, więc rekomendacje ewoluują z tygodnia na tydzień.
 
 **Wejścia (user-facing):**
 
@@ -144,7 +144,7 @@ Insight, którego status quo nie wykorzystuje, ma trzy warstwy. Po pierwsze: pro
 
 **Wyjście (user-facing):**
 
-Dla każdej części WOD-a, w widoku „dziś trenuję", konkretna sugestia w formacie dopasowanym do typu:
+Dla każdej części WOD-a, w widoku dnia (domyślnie „dziś trenuję"), konkretna sugestia w formacie dopasowanym do typu:
 
 - Strength („find 1RM / heavy single") → sugerowane obciążenie z marginesem rozgrzewki: „spróbuj 85 kg na 1RM (ostatnio 80 kg na 5)".
 - EMOM / interwał → sugerowane obciążenie + uwaga o intensywności: „45 kg na thruster, tempo 75% maxa — utrzymujesz przez 10 min".
@@ -153,7 +153,7 @@ Dla każdej części WOD-a, w widoku „dziś trenuję", konkretna sugestia w fo
 
 **Jak użytkownik to widzi w produkcie:**
 
-Wszystko mieści się w głównym widoku „dziś trenuję" — sesja dnia, dla każdej części obok nazwy ćwiczenia widoczna sugestia, pod nią pole na wpisanie realnego wyniku. Po zapisaniu pojawia się porównanie (FR-042). Historia nie jest osobnym widokiem powracającym — działa pod spodem. Im więcej sesji w historii, tym ostrzejsze sugestie.
+Punktem wejścia jest główny widok „dziś trenuję" — sesja dnia, dla każdej części obok nazwy ćwiczenia widoczna sugestia, pod nią pole na wpisanie realnego wyniku; z niego użytkownik przechodzi do pozostałych dni tygodnia, z których każdy ma własne sugestie do przejrzenia z wyprzedzeniem. Po zapisaniu wyników pojawia się porównanie (FR-042). Historia nie jest osobnym widokiem powracającym — działa pod spodem. Im więcej sesji w historii, tym ostrzejsze sugestie.
 
 ## Access Control
 

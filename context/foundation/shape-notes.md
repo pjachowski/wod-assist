@@ -21,11 +21,11 @@ timeline_budget:
 
 ## Vision & Problem Statement
 
-**Ból:** Osoba trenująca CrossFit z gotowego planu staje przed sztangą / wiosłem / kettlem i musi „na teraz" zdecydować, jakie obciążenie i tempo dobrać. Procentowe wskazówki w planie (np. „5×5 back squat @ 75%") zakładają aktualne 1RM, którego nikt nie odnawia. W metrykach czasowych (AMRAP, EMOM, „for time") nie ma nawet takiego procentowego punktu odniesienia — decyzja jest czysto na pamięć.
+**Ból:** Osoba trenująca CrossFit z gotowego planu przegląda dzisiejszy trening lub treningi na resztę tygodnia i chce z wyprzedzeniem zdecydować, jakie obciążenie i tempo dobrać. Procentowe wskazówki w planie (np. „5×5 back squat @ 75%") zakładają aktualne 1RM, którego nikt nie odnawia. W metrykach czasowych (AMRAP, EMOM, „for time") nie ma nawet takiego procentowego punktu odniesienia — decyzja jest czysto na pamięć.
 
 **Osoba:** Osoba trenująca w boksie według planu układanego przez trenera (nie programuje sobie sama; przychodzi i wykonuje WOD dnia).
 
-**Moment:** Tuż przed serią — patrzy w plan dnia, ma ~30 sekund na decyzję „ile na sztangę / w jakim tempie / ile powtórzeń realnie wyciągnę w 2 minuty".
+**Moment:** Przegląd treningu — otwiera aplikację, by obejrzeć dzisiejszy trening lub treningi na resztę tygodnia, i chce z wyprzedzeniem wiedzieć „ile na sztangę / w jakim tempie / ile powtórzeń realnie wyciągnę".
 
 **Koszt dziś:** Zgaduje z pamięci, kopiuje wynik z ostatniej podobnej sesji, pyta sąsiada, albo gra zachowawczo i tym samym nie progresuje. Wyniki, które zapisuje (jeśli zapisuje), są martwe — wracają do nich rzadko.
 
@@ -37,7 +37,7 @@ timeline_budget:
 
 ## User & Persona
 
-**Primary persona:** osoba trenująca CrossFit w boksie według planu układanego przez trenera. Konsumuje plan, nie tworzy go. Przychodzi z planem na konkretną sesję i chce wiedzieć "ile na sztangę / jakim tempem / ile powtórzeń" tu i teraz.
+**Primary persona:** osoba trenująca CrossFit w boksie według planu układanego przez trenera. Konsumuje plan, nie tworzy go. Przegląda dzisiejszy trening lub treningi na resztę tygodnia i chce z wyprzedzeniem wiedzieć "ile na sztangę / jakim tempem / ile powtórzeń".
 
 ## Access Control
 
@@ -68,7 +68,7 @@ Po wpisaniu realnego wyniku, na ekranie końca sesji użytkownik widzi porównan
 ### Guardrails (czego MVP NIE może złamać)
 
 - **Prywatność:** dane historyczne i plany są widoczne wyłącznie dla właściciela konta. Żadnego współdzielenia, eksportu, indeksowania.
-- **Mobile web:** interfejs musi być obsługiwalny jedną ręką na telefonie w sali treningowej. Brak tego = brak realnego użycia.
+- **Mobile web:** wpisywanie wyników po sesji musi być obsługiwalne jedną ręką na telefonie w sali treningowej; przeglądanie planu i sugestii ma być wygodne na telefonie, bez twardego wymogu obsługi jedną ręką. Brak tego = brak realnego użycia.
 - **Brak halucynacji przy braku danych:** gdy AI nie ma podstawy do sugestii (cold start na ćwiczeniu którego nie było w ankiecie ani w historii), mówi to wprost („za mało danych — zacznij od lekkiego obciążenia") zamiast wymyślać liczby. Zaufanie zburzone na pierwszej fałszywej sugestii nie wraca.
 
 ## Timeline budget
@@ -106,7 +106,7 @@ Po wpisaniu realnego wyniku, na ekranie końca sesji użytkownik widzi porównan
 - FR-023: Użytkownik widzi historię swoich planów / dni i może otworzyć konkretny dzień. Główny ekran aplikacji to „dziś trenuję" (najbliższa lub bieżąca sesja na pierwszym planie); lista planów jest nawigacją pomocniczą. Priority: must-have
   > Socrates: Counter-argument considered: "główny ekran powinien być 'dziś trenuję', nie lista planów". Resolution: zaakceptowane — FR uzupełniony o priorytet IA (main = today's session, secondary = plan history).
 
-### Sugestie AI (sesja "live")
+### Sugestie AI (przegląd sesji)
 
 - FR-030: Dla każdej części / ćwiczenia w wybranym dniu aplikacja sugeruje obciążenie i/lub szacunkową liczbę powtórzeń lub czas — opierając się na RX z planu (gdy dane), historii sesji użytkownika (gdy istnieje) **oraz kontekście całej sesji** (sugestie uwzględniają kumulowane zmęczenie po wcześniejszych częściach WOD-a, nie traktują każdego ćwiczenia w izolacji). Priority: must-have
   > Socrates: Counter-argument considered: "sugerowanie każdego ćwiczenia osobno ignoruje zmęczenie z wcześniejszych ćwiczeń". Resolution: zaakceptowane — FR uzupełniony o wymóg modelowania sesji jako całości, a nie pojedynczych ruchów w izolacji.
@@ -154,7 +154,7 @@ _(Pytania produktowe — weryfikacja emaila + reset hasła, mixed plans beginner
 
 ## Business Logic
 
-**Reguła w jednym zdaniu:** Na bazie historycznych wyników użytkownika i wartości RX z planu, aplikacja przed każdą sesją sugeruje konkretne obciążenie / liczbę powtórzeń / czas dla każdej części WOD-a, uwzględniając kumulowane zmęczenie w trakcie sesji — każdy wpisany wynik karmi model, więc sugestie ewoluują z tygodnia na tydzień.
+**Reguła w jednym zdaniu:** Na bazie historycznych wyników użytkownika i wartości RX z planu, aplikacja przy przeglądaniu dnia treningowego (dzisiejszego lub nadchodzącego) sugeruje konkretne obciążenie / liczbę powtórzeń / czas dla każdej części WOD-a, uwzględniając kumulowane zmęczenie w trakcie sesji — każdy wpisany wynik karmi model, więc sugestie ewoluują z tygodnia na tydzień.
 
 **Wejścia (user-facing):**
 
@@ -164,7 +164,7 @@ _(Pytania produktowe — weryfikacja emaila + reset hasła, mixed plans beginner
 
 **Wyjście (user-facing):**
 
-Dla każdej części WOD-a, w widoku „dziś trenuję", konkretna sugestia w formacie dopasowanym do typu:
+Dla każdej części WOD-a, w widoku dnia (domyślnie „dziś trenuję"), konkretna sugestia w formacie dopasowanym do typu:
 
 - Strength („find 1RM / heavy single") → sugerowane obciążenie z marginesem rozgrzewki: „Spróbuj 85 kg na 1RM (ostatnio 80 kg na 5)".
 - EMOM / interwał → sugerowane obciążenie + uwaga o intensywności: „45 kg na thruster, tempo 75% maxa — utrzymujesz przez 10 min".
@@ -177,16 +177,16 @@ Każdy wpisany wynik (FR-040) jest nowym sygnałem dla modelu (FR-041). Trafnoś
 
 **Jak użytkownik to widzi w produkcie:**
 
-Wszystko mieści się w głównym widoku „dziś trenuję" — sesja dnia, dla każdej części obok nazwy ćwiczenia widoczna sugestia AI, pod nią pole na wpisanie realnego wyniku. Po zapisaniu pojawia się porównanie (FR-042). Historia nie jest osobnym widokiem powracającym — działa pod spodem.
+Punktem wejścia jest główny widok „dziś trenuję" — sesja dnia, dla każdej części obok nazwy ćwiczenia widoczna sugestia AI, pod nią pole na wpisanie realnego wyniku; z niego użytkownik przechodzi do pozostałych dni tygodnia, z których każdy ma własne sugestie do przejrzenia z wyprzedzeniem. Po zapisaniu wyników pojawia się porównanie (FR-042). Historia nie jest osobnym widokiem powracającym — działa pod spodem.
 
 ## Non-Functional Requirements
 
-- **Czas reakcji sugestii:** od momentu otwarcia widoku „dziś trenuję" do pojawienia się sugestii dla wszystkich części sesji upływa mniej niż 3 sekundy w typowym warunku (mobilne 4G, średni rozmiar planu — 3-4 części). Powyżej tego progu użytkownik traci kontekst sesji.
+- **Czas reakcji sugestii:** od momentu otwarcia widoku dnia do pojawienia się sugestii dla wszystkich części sesji upływa na tyle krótko, by przeglądanie pozostało płynne — orientacyjnie do 5 sekund w typowym warunku (mobilne 4G, średni rozmiar planu — 3-4 części). Moment użycia to spokojny przegląd treningu, nie decyzja przy sztandze — próg jest miękki, ale chroniczne czekanie zniechęca do przeglądania kolejnych dni.
 - **Trafność sugestii:** co najmniej 70% sugestii AI mieści się w przedziale ±20% od realnego wyniku użytkownika, mierzone na zebranych danych pilotażowych po N tygodniach użycia. (Pokrywa się z Primary success criterion — pinned tu jako mierzalna jakość, nie samo kryterium sukcesu.)
 - **Prywatność danych użytkownika:** dane treningowe (plany, historia wyników) nie opuszczają systemu poza wywołaniami do dostawcy LLM niezbędnymi do parsowania planu i generowania sugestii. Brak eksportu, brak indeksowania, brak udostępniania osobom trzecim, brak elementów społecznościowych.
 - **Trwałe usunięcie danych (RODO):** użytkownik może w aplikacji uruchomić usunięcie konta wraz ze wszystkimi swoimi planami i wynikami; po potwierdzeniu dane nie są odzyskiwalne.
 - **Bezpieczeństwo haseł:** hasła użytkowników nigdy nie są przechowywane w formie czytelnej; nawet w razie wycieku bazy hasła pozostają nieodtwarzalne.
-- **Mobile-first UX:** kluczowe interakcje (otwarcie sesji dnia, wpisanie wyniku, zatwierdzenie sesji) są wykonalne jedną ręką na telefonie trzymanym w sali treningowej — przyciski akcji w zasięgu kciuka, formularze bez zoomowania.
+- **Mobile-first UX:** wpisanie wyniku i zatwierdzenie sesji są wykonalne jedną ręką na telefonie trzymanym w sali treningowej — przyciski akcji w zasięgu kciuka, formularze bez zoomowania. Przeglądanie sesji i sugestii ma być wygodne na telefonie, bez twardego wymogu obsługi jedną ręką.
 
 ## Open question (NFR)
 
