@@ -78,6 +78,17 @@ export default function SignInForm({ serverError, initialEmail }: Props) {
         }
       />
 
+      <label htmlFor="remember" className="flex items-center gap-2 text-sm text-blue-100/80">
+        <input
+          id="remember"
+          name="remember"
+          type="checkbox"
+          value="1"
+          className="size-4 rounded border-white/20 bg-white/10 accent-purple-400 focus:ring-2 focus:ring-purple-400 focus:outline-none"
+        />
+        Zapamiętaj mnie
+      </label>
+
       <ServerError message={serverError} />
 
       <SubmitButton pendingText="Logowanie..." icon={<LogIn className="size-4" />}>

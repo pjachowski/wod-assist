@@ -455,35 +455,35 @@ Istniejące sesje nie mają ciasteczka-markera — domyślny tryb trwały (`pers
 
 #### Automated
 
-- [x] 2.1 Lint przechodzi: `npm run lint`
-- [x] 2.2 Build przechodzi: `npm run build`
+- [x] 2.1 Lint przechodzi: `npm run lint` — 364b4df
+- [x] 2.2 Build przechodzi: `npm run build` — 364b4df
 
 #### Manual
 
-- [x] 2.3 Pełny reset lokalnie: formularz → polski mail w Mailpit → link → nowe hasło → auto-zalogowanie na /dashboard z potwierdzeniem
-- [x] 2.4 Nieistniejący email daje identyczne neutralne potwierdzenie
-- [x] 2.5 Zużyty link → komunikat „link wygasł" + formularz ponownej wysyłki
-- [x] 2.6 /auth/update-password bez sesji → przekierowanie na formularz resetu
-- [x] 2.7 /auth/update-password ze zwykłą sesją bez markera recovery → przekierowanie na formularz resetu
-- [x] 2.8 Bezpośredni POST z różnymi password/confirmPassword odrzucany przez serwer
-- [x] 2.9 Wylogowanie po kliknięciu linku recovery kasuje marker wa-password-recovery
-- [x] 2.10 Link „Nie pamiętasz hasła?" widoczny i działa na stronie logowania
+- [x] 2.3 Pełny reset lokalnie: formularz → polski mail w Mailpit → link → nowe hasło → auto-zalogowanie na /dashboard z potwierdzeniem — 364b4df
+- [x] 2.4 Nieistniejący email daje identyczne neutralne potwierdzenie — 364b4df
+- [x] 2.5 Zużyty link → komunikat „link wygasł" + formularz ponownej wysyłki — 364b4df
+- [x] 2.6 /auth/update-password bez sesji → przekierowanie na formularz resetu — 364b4df
+- [x] 2.7 /auth/update-password ze zwykłą sesją bez markera recovery → przekierowanie na formularz resetu — 364b4df
+- [x] 2.8 Bezpośredni POST z różnymi password/confirmPassword odrzucany przez serwer — 364b4df
+- [x] 2.9 Wylogowanie po kliknięciu linku recovery kasuje marker wa-password-recovery — 364b4df
+- [x] 2.10 Link „Nie pamiętasz hasła?" widoczny i działa na stronie logowania — 364b4df
 
 ### Phase 3: „Zapamiętaj mnie"
 
 #### Automated
 
-- [ ] 3.1 Lint przechodzi: `npm run lint`
-- [ ] 3.2 Build przechodzi: `npm run build`
+- [x] 3.1 Lint przechodzi: `npm run lint`
+- [x] 3.2 Build przechodzi: `npm run build`
 
 #### Manual
 
-- [ ] 3.3 Logowanie bez checkboxa → ciasteczka sesyjne (bez Expires/Max-Age), marker sesyjny
-- [ ] 3.4 Logowanie z checkboxem → ciasteczka z Expires ~400 dni, marker trwały
-- [ ] 3.5 Restart przeglądarki: bez checkboxa wylogowany, z checkboxem zalogowany
-- [ ] 3.6 Wylogowanie usuwa ciasteczka auth i marker
-- [ ] 3.7 Tryb sesyjny przeżywa odświeżenie tokenu (ciasteczka pozostają sesyjne)
-- [ ] 3.8 Po resecie hasła sesja jest sesyjna (restart przeglądarki wymaga logowania nowym hasłem)
+- [x] 3.3 Logowanie bez checkboxa → ciasteczka sesyjne (bez Expires/Max-Age), marker sesyjny
+- [x] 3.4 Logowanie z checkboxem → ciasteczka z Expires ~400 dni, marker trwały
+- [x] 3.5 Restart przeglądarki: bez checkboxa wylogowany, z checkboxem zalogowany
+- [x] 3.6 Wylogowanie usuwa ciasteczka auth i marker
+- [x] 3.7 Tryb sesyjny przeżywa odświeżenie tokenu (ciasteczka pozostają sesyjne)
+- [x] 3.8 Po resecie hasła sesja jest sesyjna (restart przeglądarki wymaga logowania nowym hasłem)
 
 ### Phase 4: Produkcja i weryfikacja E2E
 

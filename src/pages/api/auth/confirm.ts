@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
 import { z } from "zod";
-import { createClient, PASSWORD_RECOVERY_COOKIE } from "@/lib/supabase";
+import { createClient, PASSWORD_RECOVERY_COOKIE, SESSION_PERSIST_COOKIE } from "@/lib/supabase";
 
 export const prerender = false;
 
@@ -16,7 +16,10 @@ export const GET: APIRoute = async (context) => {
     return context.redirect("/auth/forgot-password?error=otp_expired");
   }
 
-  const supabase = createClient(context.request.headers, context.cookies);
+  // Session mode (persistSession: false): the user made no deliberate long-session choice here,
+  // so the session cookies written by verifyOtp must be session-scoped, consistent with the
+  // unchecked-by-default "remember me" checkbox at sign-in.
+  const supabase = createClient(context.request.headers, context.cookies, { persistSession: false });
   if (!supabase) {
     return context.redirect("/auth/forgot-password?error=not_configured");
   }
@@ -34,6 +37,15 @@ export const GET: APIRoute = async (context) => {
     sameSite: "lax",
     secure: import.meta.env.PROD,
     maxAge: 60 * 15, // 15 minutes to set the new password
+  });
+
+  // Mark the recovery session as session-scoped (no maxAge → session cookie) so middleware
+  // token refreshes keep it that way; a future full sign-in goes through the checkbox again.
+  context.cookies.set(SESSION_PERSIST_COOKIE, "0", {
+    path: "/",
+    httpOnly: true,
+    sameSite: "lax",
+    secure: import.meta.env.PROD,
   });
 
   return context.redirect("/auth/update-password");

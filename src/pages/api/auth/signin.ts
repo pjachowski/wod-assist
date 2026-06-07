@@ -1,10 +1,13 @@
 import type { APIRoute } from "astro";
 import { z } from "zod";
-import { createClient } from "@/lib/supabase";
+import { createClient, SESSION_PERSIST_COOKIE } from "@/lib/supabase";
+
+const PERSIST_MAX_AGE = 60 * 60 * 24 * 400; // 400 days — browsers' cap, well past the 30-day requirement
 
 const schema = z.object({
   email: z.email(),
   password: z.string().min(1),
+  remember: z.string().optional(),
 });
 
 // Keeps the entered email in the form after a failed attempt (re-fill via query param).
@@ -22,14 +25,37 @@ export const POST: APIRoute = async (context) => {
     return context.redirect(errorRedirect("validation_failed", enteredEmail));
   }
 
-  const supabase = createClient(context.request.headers, context.cookies);
+  const { email, password, remember } = parsed.data;
+  const persistSession = remember === "1";
+
+  const supabase = createClient(context.request.headers, context.cookies, { persistSession });
   if (!supabase) {
     return context.redirect(errorRedirect("not_configured", enteredEmail));
   }
-  const { error } = await supabase.auth.signInWithPassword(parsed.data);
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    return context.redirect(errorRedirect(error.code ?? "unknown", parsed.data.email));
+    return context.redirect(errorRedirect(error.code ?? "unknown", email));
+  }
+
+  // Persist the chosen mode so middleware token refreshes keep it on subsequent requests.
+  // Persistent mode gets a long-lived marker; session mode gets a session-cookie marker
+  // (no maxAge) that dies together with the auth cookies when the browser closes.
+  if (persistSession) {
+    context.cookies.set(SESSION_PERSIST_COOKIE, "1", {
+      path: "/",
+      httpOnly: true,
+      sameSite: "lax",
+      secure: import.meta.env.PROD,
+      maxAge: PERSIST_MAX_AGE,
+    });
+  } else {
+    context.cookies.set(SESSION_PERSIST_COOKIE, "0", {
+      path: "/",
+      httpOnly: true,
+      sameSite: "lax",
+      secure: import.meta.env.PROD,
+    });
   }
 
   return context.redirect("/");
