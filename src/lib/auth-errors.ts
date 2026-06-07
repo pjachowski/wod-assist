@@ -1,5 +1,5 @@
 const MESSAGES: Record<string, string> = {
-  // Kody błędów Supabase Auth (error.code)
+  // Supabase Auth error codes (error.code)
   invalid_credentials: "Nieprawidłowy email lub hasło.",
   user_already_exists: "Konto z tym adresem email już istnieje.",
   email_exists: "Konto z tym adresem email już istnieje.",
@@ -7,7 +7,7 @@ const MESSAGES: Record<string, string> = {
   same_password: "Nowe hasło musi różnić się od poprzedniego.",
   over_email_send_rate_limit: "Zbyt wiele wiadomości w krótkim czasie. Spróbuj ponownie za kilka minut.",
   otp_expired: "Link wygasł lub został już użyty — wyślij nowy.",
-  // Własne kody aplikacji
+  // Application-specific codes
   validation_failed: "Nieprawidłowe dane formularza. Sprawdź pola i spróbuj ponownie.",
   not_configured: "Aplikacja nie jest poprawnie skonfigurowana. Spróbuj ponownie później.",
 };
@@ -15,8 +15,8 @@ const MESSAGES: Record<string, string> = {
 const FALLBACK_MESSAGE = "Coś poszło nie tak. Spróbuj ponownie.";
 
 /**
- * Tłumaczy kod błędu auth (z parametru `?error=` w adresie) na polski komunikat.
- * Endpointy przekierowują z kodem; strony mapują kod na komunikat przy renderze.
+ * Maps an auth error code (from the `?error=` URL param) to a Polish message.
+ * Endpoints redirect with a code; pages translate the code at render time.
  */
 export function authErrorMessage(code: string | null): string | null {
   if (!code) {

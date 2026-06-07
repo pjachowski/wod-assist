@@ -441,33 +441,33 @@ Istniejące sesje nie mają ciasteczka-markera — domyślny tryb trwały (`pers
 
 #### Automated
 
-- [x] 1.1 Lint przechodzi: `npm run lint`
-- [x] 1.2 Build przechodzi: `npm run build`
+- [x] 1.1 Lint przechodzi: `npm run lint` — d595dc6
+- [x] 1.2 Build przechodzi: `npm run build` — d595dc6
 
 #### Manual
 
-- [x] 1.3 Logowanie błędnym hasłem pokazuje polski komunikat
-- [x] 1.4 Rejestracja na zajęty email pokazuje polski komunikat
-- [x] 1.5 Poprawne logowanie, rejestracja i wylogowanie działają jak przed zmianą
-- [x] 1.6 Wszystkie ekrany auth + dashboard w całości po polsku
+- [x] 1.3 Logowanie błędnym hasłem pokazuje polski komunikat — d595dc6
+- [x] 1.4 Rejestracja na zajęty email pokazuje polski komunikat — d595dc6
+- [x] 1.5 Poprawne logowanie, rejestracja i wylogowanie działają jak przed zmianą — d595dc6
+- [x] 1.6 Wszystkie ekrany auth + dashboard w całości po polsku — d595dc6
 
 ### Phase 2: Flow resetu hasła
 
 #### Automated
 
-- [ ] 2.1 Lint przechodzi: `npm run lint`
-- [ ] 2.2 Build przechodzi: `npm run build`
+- [x] 2.1 Lint przechodzi: `npm run lint`
+- [x] 2.2 Build przechodzi: `npm run build`
 
 #### Manual
 
-- [ ] 2.3 Pełny reset lokalnie: formularz → polski mail w Mailpit → link → nowe hasło → auto-zalogowanie na /dashboard z potwierdzeniem
-- [ ] 2.4 Nieistniejący email daje identyczne neutralne potwierdzenie
-- [ ] 2.5 Zużyty link → komunikat „link wygasł" + formularz ponownej wysyłki
-- [ ] 2.6 /auth/update-password bez sesji → przekierowanie na formularz resetu
-- [ ] 2.7 /auth/update-password ze zwykłą sesją bez markera recovery → przekierowanie na formularz resetu
-- [ ] 2.8 Bezpośredni POST z różnymi password/confirmPassword odrzucany przez serwer
-- [ ] 2.9 Wylogowanie po kliknięciu linku recovery kasuje marker wa-password-recovery
-- [ ] 2.10 Link „Nie pamiętasz hasła?" widoczny i działa na stronie logowania
+- [x] 2.3 Pełny reset lokalnie: formularz → polski mail w Mailpit → link → nowe hasło → auto-zalogowanie na /dashboard z potwierdzeniem
+- [x] 2.4 Nieistniejący email daje identyczne neutralne potwierdzenie
+- [x] 2.5 Zużyty link → komunikat „link wygasł" + formularz ponownej wysyłki
+- [x] 2.6 /auth/update-password bez sesji → przekierowanie na formularz resetu
+- [x] 2.7 /auth/update-password ze zwykłą sesją bez markera recovery → przekierowanie na formularz resetu
+- [x] 2.8 Bezpośredni POST z różnymi password/confirmPassword odrzucany przez serwer
+- [x] 2.9 Wylogowanie po kliknięciu linku recovery kasuje marker wa-password-recovery
+- [x] 2.10 Link „Nie pamiętasz hasła?" widoczny i działa na stronie logowania
 
 ### Phase 3: „Zapamiętaj mnie"
 

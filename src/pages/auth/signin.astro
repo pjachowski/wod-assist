@@ -4,6 +4,7 @@ import SignInForm from "@/components/auth/SignInForm";
 import { authErrorMessage } from "@/lib/auth-errors";
 
 const error = authErrorMessage(Astro.url.searchParams.get("error"));
+const initialEmail = Astro.url.searchParams.get("email");
 ---
 
 <Layout title="Logowanie">
@@ -14,8 +15,11 @@ const error = authErrorMessage(Astro.url.searchParams.get("error"));
       >
         Zaloguj się
       </h1>
-      <SignInForm serverError={error} client:load />
+      <SignInForm serverError={error} initialEmail={initialEmail} client:load />
       <p class="mt-4 text-center text-sm text-blue-100/60">
+        <a href="/auth/forgot-password" class="text-purple-300 hover:underline">Nie pamiętasz hasła?</a>
+      </p>
+      <p class="mt-2 text-center text-sm text-blue-100/60">
         Nie masz konta? <a href="/auth/signup" class="text-purple-300 hover:underline">Zarejestruj się</a>
       </p>
     </div>

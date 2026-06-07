@@ -65,6 +65,9 @@ const astroConfig = tseslint.config({
     "astro/no-set-html-directive": "error",
     "astro/no-unused-css-selector": "warn",
     "astro/prefer-class-list-directive": "warn",
+    // The rule crashes on Astro's valid top-level `return` in frontmatter
+    // ("Expected node to have a parent") — astro-eslint-parser doesn't give it a full typed AST.
+    "@typescript-eslint/no-misused-promises": "off",
   },
 });
 

@@ -1,0 +1,15 @@
+<html>
+  <body>
+    <h2>Reset hasła</h2>
+    <p>Cześć,</p>
+    <p>
+      otrzymaliśmy prośbę o zresetowanie hasła do Twojego konta w WodAssist. Kliknij poniższy link, aby ustawić nowe
+      hasło:
+    </p>
+    <p>
+      <a href="{{ .SiteURL }}/api/auth/confirm?token_hash={{ .TokenHash }}&type=recovery">Ustaw nowe hasło</a>
+    </p>
+    <p>Link jest ważny przez godzinę i można go użyć tylko raz.</p>
+    <p>Jeśli to nie Ty prosisz o reset hasła, zignoruj tę wiadomość — Twoje hasło pozostanie bez zmian.</p>
+  </body>
+</html>
