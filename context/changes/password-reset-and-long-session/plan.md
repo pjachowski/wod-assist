@@ -473,33 +473,33 @@ Istniejące sesje nie mają ciasteczka-markera — domyślny tryb trwały (`pers
 
 #### Automated
 
-- [x] 3.1 Lint przechodzi: `npm run lint`
-- [x] 3.2 Build przechodzi: `npm run build`
+- [x] 3.1 Lint przechodzi: `npm run lint` — 7c20ef3
+- [x] 3.2 Build przechodzi: `npm run build` — 7c20ef3
 
 #### Manual
 
-- [x] 3.3 Logowanie bez checkboxa → ciasteczka sesyjne (bez Expires/Max-Age), marker sesyjny
-- [x] 3.4 Logowanie z checkboxem → ciasteczka z Expires ~400 dni, marker trwały
-- [x] 3.5 Restart przeglądarki: bez checkboxa wylogowany, z checkboxem zalogowany
-- [x] 3.6 Wylogowanie usuwa ciasteczka auth i marker
-- [x] 3.7 Tryb sesyjny przeżywa odświeżenie tokenu (ciasteczka pozostają sesyjne)
-- [x] 3.8 Po resecie hasła sesja jest sesyjna (restart przeglądarki wymaga logowania nowym hasłem)
+- [x] 3.3 Logowanie bez checkboxa → ciasteczka sesyjne (bez Expires/Max-Age), marker sesyjny — 7c20ef3
+- [x] 3.4 Logowanie z checkboxem → ciasteczka z Expires ~400 dni, marker trwały — 7c20ef3
+- [x] 3.5 Restart przeglądarki: bez checkboxa wylogowany, z checkboxem zalogowany — 7c20ef3
+- [x] 3.6 Wylogowanie usuwa ciasteczka auth i marker — 7c20ef3
+- [x] 3.7 Tryb sesyjny przeżywa odświeżenie tokenu (ciasteczka pozostają sesyjne) — 7c20ef3
+- [x] 3.8 Po resecie hasła sesja jest sesyjna (restart przeglądarki wymaga logowania nowym hasłem) — 7c20ef3
 
 ### Phase 4: Produkcja i weryfikacja E2E
 
 #### Automated
 
-- [ ] 4.1 CI zielone na `main` (lint + build + deploy)
-- [ ] 4.2 Smoke produkcji: `/auth/signin` zwraca 200
+- [x] 4.1 CI zielone na `main` (lint + build + deploy)
+- [x] 4.2 Smoke produkcji: `/auth/signin` zwraca 200
 
 #### Manual
 
-- [ ] 4.3 Panel Supabase: Site URL + Redirect URLs ustawione na adres produkcyjny
-- [ ] 4.4 Panel Supabase: polski szablon „Reset password" (wzorzec token_hash)
-- [ ] 4.5 Panel Supabase: Confirm email wyłączone; Sessions bez time-box i limitu bezczynności (potwierdzone)
-- [ ] 4.6 Rejestracja konta testowego na prawdziwy email → logowanie działa (FR-001)
-- [ ] 4.7 Pełny reset hasła na produkcji: mail po polsku, link na domenę produkcyjną, nowe hasło, dashboard (FR-004)
-- [ ] 4.8 Ponowne użycie linku → komunikat „link wygasł" + ponowna wysyłka
+- [x] 4.3 Panel Supabase: Site URL + Redirect URLs ustawione na adres produkcyjny
+- [x] 4.4 Panel Supabase: polski szablon „Reset password" (wzorzec token_hash)
+- [x] 4.5 Panel Supabase: Confirm email wyłączone; Sessions bez time-box i limitu bezczynności (potwierdzone)
+- [x] 4.6 Rejestracja konta testowego na prawdziwy email → logowanie działa (FR-001)
+- [x] 4.7 Pełny reset hasła na produkcji: mail po polsku, link na domenę produkcyjną, nowe hasło, dashboard (FR-004)
+- [x] 4.8 Ponowne użycie linku → komunikat „link wygasł" + ponowna wysyłka
 - [ ] 4.9 „Zapamiętaj mnie": ciasteczka ~400 dni; powrót po ≥ 48 h bez logowania (FR-002)
-- [ ] 4.10 Bez „zapamiętaj mnie": po restarcie przeglądarki wymagane logowanie
-- [ ] 4.11 Wylogowanie działa i czyści sesję
+- [x] 4.10 Bez „zapamiętaj mnie": po restarcie przeglądarki wymagane logowanie
+- [x] 4.11 Wylogowanie działa i czyści sesję
