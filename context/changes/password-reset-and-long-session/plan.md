@@ -441,15 +441,15 @@ Istniejące sesje nie mają ciasteczka-markera — domyślny tryb trwały (`pers
 
 #### Automated
 
-- [ ] 1.1 Lint przechodzi: `npm run lint`
-- [ ] 1.2 Build przechodzi: `npm run build`
+- [x] 1.1 Lint przechodzi: `npm run lint`
+- [x] 1.2 Build przechodzi: `npm run build`
 
 #### Manual
 
-- [ ] 1.3 Logowanie błędnym hasłem pokazuje polski komunikat
-- [ ] 1.4 Rejestracja na zajęty email pokazuje polski komunikat
-- [ ] 1.5 Poprawne logowanie, rejestracja i wylogowanie działają jak przed zmianą
-- [ ] 1.6 Wszystkie ekrany auth + dashboard w całości po polsku
+- [x] 1.3 Logowanie błędnym hasłem pokazuje polski komunikat
+- [x] 1.4 Rejestracja na zajęty email pokazuje polski komunikat
+- [x] 1.5 Poprawne logowanie, rejestracja i wylogowanie działają jak przed zmianą
+- [x] 1.6 Wszystkie ekrany auth + dashboard w całości po polsku
 
 ### Phase 2: Flow resetu hasła
 
