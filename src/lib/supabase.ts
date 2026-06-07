@@ -17,6 +17,14 @@ export const PASSWORD_RECOVERY_COOKIE = "wa-password-recovery";
  */
 export const SESSION_PERSIST_COOKIE = "wa-session-persist";
 
+/**
+ * Sliding-window lifetime of persistent-mode auth cookies. Every token refresh renews the
+ * deadline, so only a 90-day absence signs the user out. Deliberately below the
+ * @supabase/ssr default (~400 days): a quarter of inactivity ends the session, which
+ * comfortably exceeds the 30-day requirement (FR-002) while bounding abandoned sessions.
+ */
+export const PERSIST_COOKIE_MAX_AGE = 60 * 60 * 24 * 90;
+
 interface CreateClientOptions {
   persistSession?: boolean;
 }
@@ -38,14 +46,17 @@ export function createClient(requestHeaders: Headers, cookies: AstroCookies, opt
       },
       setAll(cookiesToSet) {
         cookiesToSet.forEach(({ name, value, options: cookieOptions }) => {
-          // Session mode: strip maxAge/expires so auth cookies die with the browser session.
-          // Only when maxAge > 0 — @supabase/ssr deletes cookies via maxAge: 0, and stripping
-          // that would turn a deletion into a set and break sign-out.
-          if (!persistSession && typeof cookieOptions.maxAge === "number" && cookieOptions.maxAge > 0) {
-            const sessionOptions = { ...cookieOptions };
-            delete sessionOptions.maxAge;
-            delete sessionOptions.expires;
-            cookies.set(name, value, sessionOptions);
+          // Only adjust lifetimes when maxAge > 0 — @supabase/ssr deletes cookies via maxAge: 0,
+          // and touching that would turn a deletion into a set and break sign-out.
+          if (typeof cookieOptions.maxAge === "number" && cookieOptions.maxAge > 0) {
+            const adjusted = { ...cookieOptions };
+            delete adjusted.expires;
+            if (persistSession) {
+              adjusted.maxAge = PERSIST_COOKIE_MAX_AGE;
+            } else {
+              delete adjusted.maxAge;
+            }
+            cookies.set(name, value, adjusted);
             return;
           }
           cookies.set(name, value, cookieOptions);

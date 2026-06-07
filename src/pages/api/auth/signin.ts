@@ -1,8 +1,6 @@
 import type { APIRoute } from "astro";
 import { z } from "zod";
-import { createClient, SESSION_PERSIST_COOKIE } from "@/lib/supabase";
-
-const PERSIST_MAX_AGE = 60 * 60 * 24 * 400; // 400 days — browsers' cap, well past the 30-day requirement
+import { createClient, SESSION_PERSIST_COOKIE, PERSIST_COOKIE_MAX_AGE } from "@/lib/supabase";
 
 const schema = z.object({
   email: z.email(),
@@ -39,15 +37,13 @@ export const POST: APIRoute = async (context) => {
   }
 
   // Persist the chosen mode so middleware token refreshes keep it on subsequent requests.
-  // Persistent mode gets a long-lived marker; session mode gets a session-cookie marker
-  // (no maxAge) that dies together with the auth cookies when the browser closes.
   if (persistSession) {
     context.cookies.set(SESSION_PERSIST_COOKIE, "1", {
       path: "/",
       httpOnly: true,
       sameSite: "lax",
       secure: import.meta.env.PROD,
-      maxAge: PERSIST_MAX_AGE,
+      maxAge: PERSIST_COOKIE_MAX_AGE,
     });
   } else {
     context.cookies.set(SESSION_PERSIST_COOKIE, "0", {
